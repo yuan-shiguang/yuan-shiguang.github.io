@@ -1,0 +1,552 @@
+<!DOCTYPE html>
+
+
+<html theme="dark" showBanner="true" hasBanner="true" > 
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/fontawesome.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/brands.min.css" rel="stylesheet">
+<link href="https://cdn.staticfile.org/font-awesome/6.4.2/css/solid.min.css" rel="stylesheet">
+<script src="/js/color.global.min.js" ></script>
+<script src="/js/load-settings.js" ></script>
+<head>
+  <meta charset="utf-8">
+  
+  
+  
+
+  
+  <title>twrp2orangefox | Yuanshiguang | 元時光</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+  <link rel="preload" href="/css/fonts/Roboto-Regular.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+  <link rel="preload" href="/css/fonts/Roboto-Bold.ttf" as="font" type="font/ttf" crossorigin="anonymous">
+
+  <meta name="description" content="从 TWRP (A9.0) 设备树迁移到 OrangeFox (A12.1) 设备树以小米 Mi 8 SE（sirius）为例。两棵树：  旧树：android_device_xiaomi_xmsirius —— TWRP&#x2F;Omni 时代的 A9.0 树，代号 xmsirius 新树：android_device_xiaomi_sirius —— OrangeFox 官方 A12.1 树">
+<meta property="og:type" content="article">
+<meta property="og:title" content="twrp2orangefox">
+<meta property="og:url" content="http://example.com/2026/09/13/twrp2orangefox/index.html">
+<meta property="og:site_name" content="Yuanshiguang | 元時光">
+<meta property="og:description" content="从 TWRP (A9.0) 设备树迁移到 OrangeFox (A12.1) 设备树以小米 Mi 8 SE（sirius）为例。两棵树：  旧树：android_device_xiaomi_xmsirius —— TWRP&#x2F;Omni 时代的 A9.0 树，代号 xmsirius 新树：android_device_xiaomi_sirius —— OrangeFox 官方 A12.1 树">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-09-13T14:36:31.000Z">
+<meta property="article:modified_time" content="2026-09-13T15:11:22.774Z">
+<meta property="article:author" content="元時光">
+<meta property="article:tag" content="Android">
+<meta property="article:tag" content="OrangeFox">
+<meta property="article:tag" content="TWRP">
+<meta name="twitter:card" content="summary">
+  
+    <link rel="alternate" href="/atom.xml" title="Yuanshiguang | 元時光" type="application/atom+xml">
+  
+  
+    <link rel="shortcut icon" href="/favicon.png">
+  
+  
+  
+<link rel="stylesheet" href="/css/style.css">
+
+<meta name="generator" content="Hexo 8.1.2"></head>
+
+<body>
+  
+  
+    
+<div id="banner" class="">
+  <img src="/banner.jpg" itemprop="image">
+  <div id="banner-dim"></div>
+</div>
+ 
+   
+  <div id="main-grid" class="  ">
+    <div id="nav" class=""  >
+      <navbar id="navbar">
+  <nav id="title-nav">
+    <a href="/">
+      <div id="vivia-logo">
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+        <div class="dot"></div>
+      </div>
+      <div>Yuanshiguang | 元時光 </div>
+    </a>
+  </nav>
+  <nav id="main-nav">
+    
+      <a class="main-nav-link" href="/">Home</a>
+    
+      <a class="main-nav-link" href="/archives">Archives</a>
+    
+      <a class="main-nav-link" href="/about">About</a>
+    
+  </nav>
+  <nav id="sub-nav">
+    <a id="theme-btn" class="nav-icon">
+      <span class="light-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M438.5-829.913v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-829.913Zm0 747.826v-48q0-17.452 11.963-29.476 11.964-12.024 29.326-12.024 17.363 0 29.537 12.024t12.174 29.476v48q0 17.452-11.963 29.476-11.964 12.024-29.326 12.024-17.363 0-29.537-12.024T438.5-82.087ZM877.913-438.5h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537t29.476-12.174h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T877.913-438.5Zm-747.826 0h-48q-17.452 0-29.476-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T82.087-521.5h48q17.452 0 29.476 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T130.087-438.5Zm660.174-290.87-34.239 32q-12.913 12.674-29.565 12.174-16.653-.5-29.327-13.174-12.674-12.673-12.554-28.826.12-16.152 12.794-28.826l33-35q12.913-12.674 30.454-12.674t30.163 12.847q12.709 12.846 12.328 30.826-.38 17.98-13.054 30.653ZM262.63-203.978l-32 34q-12.913 12.674-30.454 12.674t-30.163-12.847q-12.709-12.846-12.328-30.826.38-17.98 13.054-30.653l33.239-31q12.913-12.674 29.565-12.174 16.653.5 29.327 13.174 12.674 12.673 12.554 28.826-.12 16.152-12.794 28.826Zm466.74 33.239-32-33.239q-12.674-12.913-12.174-29.565.5-16.653 13.174-29.327 12.673-12.674 28.826-13.054 16.152-.38 28.826 12.294l35 33q12.674 12.913 12.674 30.454t-12.847 30.163q-12.846 12.709-30.826 12.328-17.98-.38-30.653-13.054ZM203.978-697.37l-34-33q-12.674-12.913-13.174-29.945-.5-17.033 12.174-29.707t31.326-13.293q18.653-.62 31.326 13.054l32 34.239q11.674 12.913 11.174 29.565-.5 16.653-13.174 29.327-12.673 12.674-28.826 12.554-16.152-.12-28.826-12.794ZM480-240q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 100-70 170t-170 70Zm-.247-82q65.703 0 111.475-46.272Q637-414.544 637-480.247t-45.525-111.228Q545.95-637 480.247-637t-111.475 45.525Q323-545.95 323-480.247t45.525 111.975Q414.05-322 479.753-322ZM481-481Z"/></svg></span>
+      <span class="dark-mode-icon"><svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M480.239-116.413q-152.63 0-258.228-105.478Q116.413-327.37 116.413-480q0-130.935 77.739-227.435t206.304-125.043q43.022-9.631 63.87 10.869t3.478 62.805q-8.891 22.043-14.315 44.463-5.424 22.42-5.424 46.689 0 91.694 64.326 155.879 64.325 64.186 156.218 64.186 24.369 0 46.978-4.946 22.609-4.945 44.413-14.076 42.826-17.369 62.967 1.142 20.142 18.511 10.511 61.054Q807.174-280 712.63-198.206q-94.543 81.793-232.391 81.793Zm0-95q79.783 0 143.337-40.217 63.554-40.218 95.793-108.283-15.608 4.044-31.097 5.326-15.49 1.283-31.859.805-123.706-4.066-210.777-90.539-87.071-86.473-91.614-212.092-.24-16.369.923-31.978 1.164-15.609 5.446-30.978-67.826 32.478-108.282 96.152Q211.652-559.543 211.652-480q0 111.929 78.329 190.258 78.329 78.329 190.258 78.329ZM466.13-465.891Z"/></svg></span>
+    </a>
+    
+      <a id="nav-rss-link" class="nav-icon mobile-hide" href="/atom.xml" title="RSS 订阅">
+        <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M198-120q-25.846 0-44.23-18.384-18.384-18.385-18.384-44.23 0-25.846 18.384-44.23 18.384-18.385 44.23-18.385 25.846 0 44.23 18.385 18.384 18.384 18.384 44.23 0 25.845-18.384 44.23Q223.846-120 198-120Zm538.385 0q-18.846 0-32.923-13.769-14.076-13.769-15.922-33.23-8.692-100.616-51.077-188.654-42.385-88.039-109.885-155.539-67.5-67.501-155.539-109.885Q283-663.462 182.385-672.154q-19.461-1.846-33.23-16.23-13.769-14.385-13.769-33.846t14.076-32.922q14.077-13.461 32.923-12.23 120.076 8.692 226.038 58.768 105.961 50.077 185.73 129.846 79.769 79.769 129.846 185.731 50.077 105.961 58.769 226.038 1.231 18.846-12.538 32.922Q756.461-120 736.385-120Zm-252 0q-18.231 0-32.423-13.461t-18.653-33.538Q418.155-264.23 348.886-333.5q-69.27-69.27-166.501-84.423-20.077-4.462-33.538-18.961-13.461-14.5-13.461-33.346 0-19.076 13.884-33.23 13.884-14.153 33.115-10.922 136.769 15.384 234.384 112.999 97.615 97.615 112.999 234.384 3.231 19.23-10.538 33.115Q505.461-120 484.385-120Z"/></svg>
+      </a>
+    
+    <div id="nav-menu-btn" class="nav-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" height="20" viewBox="0 -960 960 960" width="20"><path d="M177.37-252.282q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Zm0-186.218q-17.453 0-29.477-11.963-12.024-11.964-12.024-29.326 0-17.363 12.024-29.537T177.37-521.5h605.26q17.453 0 29.477 11.963 12.024 11.964 12.024 29.326 0 17.363-12.024 29.537T782.63-438.5H177.37Zm0-186.217q-17.453 0-29.477-11.964-12.024-11.963-12.024-29.326t12.024-29.537q12.024-12.174 29.477-12.174h605.26q17.453 0 29.477 11.964 12.024 11.963 12.024 29.326t-12.024 29.537q-12.024 12.174-29.477 12.174H177.37Z"/></svg>
+    </div>
+  </nav>
+</navbar>
+<div id="nav-dropdown" class="hidden">
+  <div id="dropdown-link-list">
+    
+      <a class="nav-dropdown-link" href="/">Home</a>
+    
+      <a class="nav-dropdown-link" href="/archives">Archives</a>
+    
+      <a class="nav-dropdown-link" href="/about">About</a>
+    
+    
+      <a class="nav-dropdown-link" href="/atom.xml" title="RSS 订阅">RSS</a>
+     
+    </div>
+</div>
+<script>
+  let dropdownBtn = document.getElementById("nav-menu-btn");
+  let dropdownEle = document.getElementById("nav-dropdown");
+  dropdownBtn.onclick = function() {
+    dropdownEle.classList.toggle("hidden");
+  }
+</script>
+    </div>
+    <div id="sidebar-wrapper">
+      <sidebar id="sidebar">
+  
+    <div class="widget-wrap">
+  <div class="info-card">
+    <div class="avatar">
+      
+        <image src=/avatar.png></image>
+      
+      <div class="img-dim"></div>
+    </div>
+    <div class="info">
+      <div class="username">元時光 </div>
+      <div class="dot"></div>
+      <div class="subtitle">(摸鱼ing...) </div>
+      <div class="link-list">
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://twitter.com/yuanshiguang" title="Twitter"><i class="fa-brands fa-twitter"></i></a>
+        
+          <a class="link-btn" href="mailto:385325061@qq.com" title="Email"><i class="fa-solid fa-at"></i></a>
+        
+          <a class="link-btn" target="_blank" rel="noopener" href="https://github.com/yuan-shiguang" title="GitHub"><i class="fa-brands fa-github"></i></a>
+         
+      </div>  
+    </div>
+  </div>
+</div>
+
+  
+  <div class="sticky">
+    
+      
+
+
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">标签</h3>
+      <ul class="widget-tag-list" itemprop="keywords"><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/OrangeFox/" rel="tag">OrangeFox</a></li><li class="widget-tag-list-item"><a class="widget-tag-list-link" href="/tags/TWRP/" rel="tag">TWRP</a></li></ul>
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">归档</h3>
+      
+      
+        <a class="archive-link" href="/archives/2026/09 ">
+          九月 2026 
+          <div class="archive-count">1 </div>
+        </a>
+      
+    </div>
+  </div>
+
+
+    
+      
+  <div class="widget-wrap">
+    <div class="widget">
+      <h3 class="widget-title">最新文章</h3>
+      <ul>
+        
+          <a class="recent-link" href="/2026/09/13/twrp2orangefox/" title="twrp2orangefox" >
+            <div class="recent-link-text">
+              twrp2orangefox
+            </div>
+          </a>
+        
+      </ul>
+    </div>
+  </div>
+
+    
+  </div>
+</sidebar>
+    </div>
+    <div id="content-body">
+       
+
+
+<article id="post-twrp2orangefox" class="h-entry article article-type-post" itemprop="blogPost" itemscope itemtype="https://schema.org/BlogPosting">
+  
+    
+   
+  <div class="article-inner">
+    <div class="article-main">
+      <header class="article-header">
+        
+<div class="main-title-bar">
+  <div class="main-title-dot"></div>
+  
+    
+      <h1 class="p-name article-title" itemprop="headline name">
+        twrp2orangefox
+      </h1>
+    
+  
+</div>
+
+        <div class='meta-info-bar'>
+          <div class="meta-info">
+  <time class="dt-published" datetime="2026-09-13T14:36:31.000Z" itemprop="datePublished">2026-09-13</time>
+</div>
+          <div class="need-seperator meta-info">
+            <div class="meta-cate-flex">
+  
+    未分类 
+   
+</div>
+  
+          </div>
+          <div class="wordcount need-seperator meta-info">
+            9.5k 词 
+          </div>
+        </div>
+        
+  <ul class="article-tag-list" itemprop="keywords"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Android/" rel="tag">Android</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/OrangeFox/" rel="tag">OrangeFox</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/TWRP/" rel="tag">TWRP</a></li></ul>
+
+      </header>
+      <div class="e-content article-entry" itemprop="articleBody">
+        
+          <h1 id="从-TWRP-A9-0-设备树迁移到-OrangeFox-A12-1-设备树"><a href="#从-TWRP-A9-0-设备树迁移到-OrangeFox-A12-1-设备树" class="headerlink" title="从 TWRP (A9.0) 设备树迁移到 OrangeFox (A12.1) 设备树"></a>从 TWRP (A9.0) 设备树迁移到 OrangeFox (A12.1) 设备树</h1><p>以小米 Mi 8 SE（sirius）为例。两棵树：</p>
+<ul>
+<li><strong>旧树</strong>：<code>android_device_xiaomi_xmsirius</code> —— TWRP&#x2F;Omni 时代的 A9.0 树，代号 <code>xmsirius</code></li>
+<li><strong>新树</strong>：<code>android_device_xiaomi_sirius</code> —— OrangeFox 官方 A12.1 树，代号 <code>sirius</code></li>
+</ul>
+<p>设备完全相同（SDM710 &#x2F; Mi 8 SE），差异全部来自 <strong>Android 版本演进（A9 → A12）</strong> 和 <strong>Recovery 框架演进（旧 TWRP → OrangeFox）</strong>。下面按文件逐个讲解怎么改。</p>
+<hr>
+<h2 id="一、总览：目录结构对比"><a href="#一、总览：目录结构对比" class="headerlink" title="一、总览：目录结构对比"></a>一、总览：目录结构对比</h2><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">旧树 (A9.0 / TWRP)                    新树 (A12.1 / OrangeFox)</span><br><span class="line">android_device_xiaomi_xmsirius/       android_device_xiaomi_sirius/</span><br><span class="line">├── Android.mk                        ├── Android.mk</span><br><span class="line">├── AndroidProducts.mk                ├── AndroidProducts.mk</span><br><span class="line">├── BoardConfig.mk                    ├── BoardConfig.mk</span><br><span class="line">├── Image.gz-dtb          ──移动──▶   ├── prebuilt/Image.gz-dtb</span><br><span class="line">├── omni.dependencies     ──删除──▶   (由 vendorsetup.sh / manifest 管理)</span><br><span class="line">├── omni_xmsirius.mk      ──改名──▶   ├── twrp_sirius.mk</span><br><span class="line">│                                      ├── device.mk            (新增)</span><br><span class="line">│                                      ├── board-info.txt       (新增)</span><br><span class="line">│                                      ├── README.md            (新增)</span><br><span class="line">├── recovery.fstab                    ├── recovery.fstab        (FDE→FBE)</span><br><span class="line">└── recovery/root/                    └── recovery/root/</span><br><span class="line">    ├── sbin/             ──拆分──▶       ├── system/bin/        (HAL 服务)</span><br><span class="line">    │   (服务+so 全塞一起)                 ├── system/etc/</span><br><span class="line">    │                                      │   ├── twrp.flags</span><br><span class="line">    │                                      │   └── vintf/manifest.xml</span><br><span class="line">    ├── vendor/                          ├── vendor/</span><br><span class="line">    │   ├── manifest.xml    ──合并──▶       │   ├── etc/vintf/manifest.xml</span><br><span class="line">    │   ├── compatibility_matrix.xml ──删除  │   ├── lib64/     (依赖库)</span><br><span class="line">    │   └── lib64/                          │   └── ueventd.rc</span><br><span class="line">    ├── ueventd.qcom.rc    ──替换──▶       ├── init.recovery.qcom.rc (重写)</span><br><span class="line">    ├── fstab.qcom         ──删除──▶       └── init.recovery.usb.rc  (改写)</span><br><span class="line">    ├── init.recovery.qcom.rc</span><br><span class="line">    └── init.recovery.usb.rc</span><br></pre></td></tr></table></figure>
+
+<p>核心变化一句话：<strong>A10 起 recovery ramdisk 改用 system-as-root 风格布局，HAL 服务从 <code>/sbin</code> 手动管理变成 <code>/system/bin</code> + <code>/vendor</code> + VINTF manifest 自动注册</strong>。</p>
+<hr>
+<h2 id="二、顶层文件改名与新增"><a href="#二、顶层文件改名与新增" class="headerlink" title="二、顶层文件改名与新增"></a>二、顶层文件改名与新增</h2><h3 id="1-AndroidProducts-mk"><a href="#1-AndroidProducts-mk" class="headerlink" title="1. AndroidProducts.mk"></a>1. AndroidProducts.mk</h3><p>产品名从 <code>omni_</code> 前缀改成 <code>twrp_</code> 前缀（OrangeFox 基于 TWRP 源码构建），并补上 lunch 选项：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> PRODUCT_MAKEFILES := \</span><br><span class="line"><span class="deletion">-    $(LOCAL_DIR)/omni_xmsirius.mk</span></span><br><span class="line"><span class="addition">+    $(LOCAL_DIR)/twrp_sirius.mk</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+COMMON_LUNCH_CHOICES := \</span></span><br><span class="line"><span class="addition">+    twrp_sirius-user \</span></span><br><span class="line"><span class="addition">+    twrp_sirius-userdebug \</span></span><br><span class="line"><span class="addition">+    twrp_sirius-eng</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-Android-mk"><a href="#2-Android-mk" class="headerlink" title="2. Android.mk"></a>2. Android.mk</h3><p>设备代号过滤条件同步修改，顺带换成更规范的 <code>filter</code> 写法：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="deletion">-ifneq ($(xmsirius,$(TARGET_DEVICE)),)</span></span><br><span class="line"><span class="addition">+ifneq ($(filter sirius,$(TARGET_DEVICE)),)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-omni-xmsirius-mk-→-twrp-sirius-mk"><a href="#3-omni-xmsirius-mk-→-twrp-sirius-mk" class="headerlink" title="3. omni_xmsirius.mk → twrp_sirius.mk"></a>3. omni_xmsirius.mk → twrp_sirius.mk</h3><p>重命名文件后修改内容：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="addition">+PRODUCT_RELEASE_NAME := sirius</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+# This path must be set here</span></span><br><span class="line"><span class="addition">+DEVICE_PATH := device/xiaomi/$(PRODUCT_RELEASE_NAME)</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"> # Inherit from the common Open Source product configuration</span><br><span class="line"><span class="addition">+$(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)</span></span><br><span class="line"> $(call inherit-product, $(SRC_TARGET_DIR)/product/aosp_base_telephony.mk)</span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+# Inherit from the device-specific device.mk (if it exists)</span></span><br><span class="line"><span class="addition">+$(call inherit-product-if-exists, $(DEVICE_PATH)/device.mk)</span></span><br><span class="line"></span><br><span class="line"> # Device identifier. This must come after all inclusions</span><br><span class="line"><span class="deletion">-PRODUCT_NAME := omni_xmsirius</span></span><br><span class="line"><span class="deletion">-PRODUCT_DEVICE := xmsirius</span></span><br><span class="line"><span class="addition">+PRODUCT_DEVICE := $(PRODUCT_RELEASE_NAME)</span></span><br><span class="line"><span class="addition">+PRODUCT_NAME := twrp_$(PRODUCT_RELEASE_NAME)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-新增-device-mk"><a href="#4-新增-device-mk" class="headerlink" title="4. 新增 device.mk"></a>4. 新增 device.mk</h3><p>新树用 <code>device.mk</code> 把 <code>recovery/root/</code> 下所有文件<strong>递归复制进 recovery ramdisk</strong>，这样 ramdisk 内容完全由目录结构决定，不用再在 mk 里逐条写 <code>PRODUCT_COPY_FILES</code>：</p>
+<figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">PRODUCT_COPY_FILES += \</span><br><span class="line">    <span class="variable">$(<span class="built_in">call</span> find-copy-subdir-files,*,<span class="variable">$(DEVICE_PATH)</span>/recovery/root/,<span class="variable">$(TARGET_COPY_OUT_RECOVERY)</span>/root/)</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-删除-omni-dependencies"><a href="#5-删除-omni-dependencies" class="headerlink" title="5. 删除 omni.dependencies"></a>5. 删除 omni.dependencies</h3><p>内容本来就只是个空数组，OrangeFox 时代依赖由仓库自带（本树依赖 <code>device/xiaomi/sdm845-common</code>，构建脚本 <code>vendorsetup.sh</code> 会自动克隆）。</p>
+<h3 id="6-新增-board-info-txt"><a href="#6-新增-board-info-txt" class="headerlink" title="6. 新增 board-info.txt"></a>6. 新增 board-info.txt</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">require board=sdm710|sirius</span><br></pre></td></tr></table></figure>
+
+<p>供 <code>check-device</code> &#x2F; OTA 工具校验机型用，一行即可。</p>
+<h3 id="7-内核移动位置"><a href="#7-内核移动位置" class="headerlink" title="7. 内核移动位置"></a>7. 内核移动位置</h3><figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Image.gz-dtb  →  prebuilt/Image.gz-dtb</span><br></pre></td></tr></table></figure>
+
+<p>A12 的构建系统对根目录预编译文件检查更严格，放进 <code>prebuilt/</code> 目录更干净（对应 BoardConfig 里的路径修改见下节）。</p>
+<hr>
+<h2 id="三、BoardConfig-mk-修改"><a href="#三、BoardConfig-mk-修改" class="headerlink" title="三、BoardConfig.mk 修改"></a>三、BoardConfig.mk 修改</h2><h3 id="1-新增路径定义（放最前面）"><a href="#1-新增路径定义（放最前面）" class="headerlink" title="1. 新增路径定义（放最前面）"></a>1. 新增路径定义（放最前面）</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="addition">+# common paths</span></span><br><span class="line"><span class="addition">+DEVICE_PATH := device/xiaomi/sirius</span></span><br></pre></td></tr></table></figure>
+
+<p>后面所有引用 <code>device/xiaomi/xmsirius/...</code> 的地方统一换成 <code>$(DEVICE_PATH)</code>。</p>
+<h3 id="2-架构"><a href="#2-架构" class="headerlink" title="2. 架构"></a>2. 架构</h3><p>32 位侧从 armv7 改为 armv8，并补 runtime 变量：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"> TARGET_2ND_ARCH := arm</span><br><span class="line"><span class="deletion">-TARGET_2ND_ARCH_VARIANT := armv7-a-neon</span></span><br><span class="line"><span class="addition">+TARGET_2ND_ARCH_VARIANT := armv8-a</span></span><br><span class="line"> TARGET_2ND_CPU_ABI := armeabi-v7a</span><br><span class="line"> TARGET_2ND_CPU_ABI2 := armeabi</span><br><span class="line"> TARGET_2ND_CPU_VARIANT := cortex-a53</span><br><span class="line"><span class="addition">+TARGET_2ND_CPU_VARIANT_RUNTIME := cortex-a53</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="3-内核"><a href="#3-内核" class="headerlink" title="3. 内核"></a>3. 内核</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="addition">+BOARD_KERNEL_IMAGE_NAME := Image.gz-dtb</span></span><br><span class="line"> TARGET_PREBUILT_KERNEL := device/xiaomi/xmsirius/Image.gz-dtb</span><br><span class="line"><span class="addition">+TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/Image.gz-dtb</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="4-新增-OTA-fstab-board-info-指定"><a href="#4-新增-OTA-fstab-board-info-指定" class="headerlink" title="4. 新增 OTA &#x2F; fstab &#x2F; board-info 指定"></a>4. 新增 OTA &#x2F; fstab &#x2F; board-info 指定</h3><figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="addition">+# OTA</span></span><br><span class="line"><span class="addition">+TARGET_OTA_ASSERT_DEVICE := sirius</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"> TARGET_RECOVERY_FSTAB := $(DEVICE_PATH)/recovery.fstab</span><br><span class="line"><span class="addition">+TARGET_BOARD_INFO_FILE := $(DEVICE_PATH)/board-info.txt</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="5-新增-Broken-Rules（A12-构建系统必需）"><a href="#5-新增-Broken-Rules（A12-构建系统必需）" class="headerlink" title="5. 新增 Broken Rules（A12 构建系统必需）"></a>5. 新增 Broken Rules（A12 构建系统必需）</h3><p>A10+ 的 Soong&#x2F;Make 检查严格很多，预编译 so 复制会报错，必须加豁免：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="addition">+# Broken Rules</span></span><br><span class="line"><span class="addition">+BUILD_BROKEN_DUP_RULES := true</span></span><br><span class="line"><span class="addition">+BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>没有这两行，A12.1 源码下编译预编译库时会直接报 <code>cc_library</code> &#x2F; duplicate rules 错误。</p>
+</blockquote>
+<h3 id="6-亮度配置（新树新增）"><a href="#6-亮度配置（新树新增）" class="headerlink" title="6. 亮度配置（新树新增）"></a>6. 亮度配置（新树新增）</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">TW_BRIGHTNESS_PATH := <span class="string">&quot;/sys/class/backlight/panel0-backlight/brightness&quot;</span></span><br><span class="line">TW_MAX_BRIGHTNESS := 2047</span><br><span class="line">TW_DEFAULT_BRIGHTNESS := 511</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><strong>注意坑</strong>：新树里 <code>TW_MAX_BRIGHTNESS</code> 定义了两次（另一处是 4095&#x2F;1200），Make 中<strong>后一次赋值覆盖前一次</strong>，实际生效 2047&#x2F;511。迁移时自己只保留一份，别复制这个历史遗留问题。</p>
+</blockquote>
+<h3 id="7-OrangeFox-专属-flag"><a href="#7-OrangeFox-专属-flag" class="headerlink" title="7. OrangeFox 专属 flag"></a>7. OrangeFox 专属 flag</h3><figure class="highlight makefile"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 电池服务走旧式（legacy）路径，A12 框架默认已不兼容老内核的电池节点</span></span><br><span class="line">OF_USE_LEGACY_BATTERY_SERVICES := 1</span><br></pre></td></tr></table></figure>
+
+<p>Mi 8 SE 是 2018 年 A8.1 出厂的 4.9 内核，电量读取走的还是旧式 battery service。OrangeFox（A12 框架）默认按新方式读取，会显示不出电量或恒为 0%，必须开这个 flag 回退到 legacy 路径。</p>
+<p>其余 TWRP flag（主题、加密、NTFS、CPU 温度路径等）两棵树基本一致，直接保留即可。</p>
+<hr>
+<h2 id="四、recovery-root-布局改造（重点）"><a href="#四、recovery-root-布局改造（重点）" class="headerlink" title="四、recovery&#x2F;root 布局改造（重点）"></a>四、recovery&#x2F;root 布局改造（重点）</h2><p>这是 A9 → A12 <strong>工作量最大</strong>的部分。</p>
+<h3 id="1-sbin-目录拆分"><a href="#1-sbin-目录拆分" class="headerlink" title="1. sbin 目录拆分"></a>1. sbin 目录拆分</h3><p>旧树把服务二进制和依赖库全塞在 <code>sbin/</code>，新树按分区语义拆开：</p>
+<table>
+<thead>
+<tr>
+<th>旧树位置</th>
+<th>新树位置</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>sbin/qseecomd</code> 等服务</td>
+<td><code>system/bin/</code></td>
+<td>qseecomd、<a href="mailto:&#x67;&#97;&#116;&#x65;&#x6b;&#x65;&#x65;&#x70;&#x65;&#x72;&#x40;&#49;&#46;&#48;&#45;&#115;&#x65;&#114;&#118;&#x69;&#99;&#101;&#x2d;&#x71;&#116;&#x69;">gatekeeper@1.0-service-qti</a>、<a href="mailto:&#x6b;&#101;&#121;&#109;&#x61;&#x73;&#x74;&#101;&#x72;&#x40;&#52;&#46;&#x30;&#x2d;&#x73;&#x65;&#114;&#x76;&#x69;&#99;&#101;&#x2d;&#113;&#x74;&#105;">keymaster@4.0-service-qti</a></td>
+</tr>
+<tr>
+<td><code>sbin/*.so</code></td>
+<td><code>system/bin/</code> 同级</td>
+<td>服务自身依赖（与二进制同目录）</td>
+</tr>
+<tr>
+<td><code>vendor/lib64/*.so</code></td>
+<td><code>vendor/lib64/</code></td>
+<td>qsee 依赖库（libQSEEComAPI、librpmb、libdrmfs 等）</td>
+</tr>
+<tr>
+<td>—</td>
+<td><code>system/etc/twrp.flags</code></td>
+<td>新增，TWRP 分区 flag</td>
+</tr>
+</tbody></table>
+<p><strong>keymaster 从 3.0 升级到 4.0</strong>：<code>system/bin/</code> 里换用 <code>android.hardware.keymaster@4.0-service-qti</code>，依赖库增加 <code>libqtikeymaster4.so</code>。这批二进制不是凭空来的——<strong>从你想支持的 A11&#x2F;A12 ROM 的 vendor.img 里提取</strong>，版本必须与目标 ROM 匹配，否则解密必挂。</p>
+<h3 id="2-VINTF-manifest-重组"><a href="#2-VINTF-manifest-重组" class="headerlink" title="2. VINTF manifest 重组"></a>2. VINTF manifest 重组</h3><ul>
+<li>删除 <code>vendor/compatibility_matrix.xml</code>（A9 ramdisk 方案，已废弃）</li>
+<li>删除 <code>vendor/manifest.xml</code>（旧位置）</li>
+<li>新增 <code>system/etc/vintf/manifest.xml</code> —— framework 侧 manifest（system-sdk 声明 28–31）</li>
+<li>新增 <code>vendor/etc/vintf/manifest.xml</code> —— device 侧 manifest（<code>target-level=&quot;3&quot;</code>，<code>sepolicy 31.0</code>，keymaster 声明为 <code>@4.0</code>）</li>
+</ul>
+<p>新的 device manifest 同样从目标 ROM 的 <code>vendor/etc/vintf/manifest.xml</code> 提取后精简（只保留 recovery 解密需要的 gatekeeper&#x2F;keymaster&#x2F;qseecom 相关及基本 HAL）。</p>
+<h3 id="3-ueventd"><a href="#3-ueventd" class="headerlink" title="3. ueventd"></a>3. ueventd</h3><p>删除 <code>root/ueventd.qcom.rc</code>，新增 <code>root/vendor/ueventd.rc</code>（从 A12 ROM vendor 提取），并保留关键的固件路径声明：</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">firmware_directories /vendor/firmware_mnt/image/</span><br></pre></td></tr></table></figure>
+
+<p>以及 <code>/dev/qseecom 0660 system drmrpc</code> 等解密所需节点权限。</p>
+<h3 id="4-删除-fstab-qcom"><a href="#4-删除-fstab-qcom" class="headerlink" title="4. 删除 fstab.qcom"></a>4. 删除 fstab.qcom</h3><p>旧树 ramdisk 里带一份 <code>fstab.qcom</code>（含 <code>fileencryption=ice</code>）。A12 方案下 recovery 只认 <code>BOARD_RECOVERY_FSTAB</code> 指定的 <code>recovery.fstab</code>，ramdisk fstab 删掉。</p>
+<hr>
+<h2 id="五、init-recovery-qcom-rc-重写"><a href="#五、init-recovery-qcom-rc-重写" class="headerlink" title="五、init.recovery.qcom.rc 重写"></a>五、init.recovery.qcom.rc 重写</h2><p>旧树（A9 风格）核心是<strong>手动管理解密服务</strong>：手写一堆 <code>service</code> 定义，再用 <code>crypto.ready</code> 属性开关启停 qseecomd &#x2F; keymaster-3-0 &#x2F; gatekeeper &#x2F; hwservicemanager &#x2F; servicemanager，还带一段 CPU 调频脚本。这些全部删掉。</p>
+<p>新树全文只有 24 行：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">import /init.recovery.qcom_decrypt.rc</span><br><span class="line"></span><br><span class="line">on fs</span><br><span class="line">    wait /dev/block/platform/soc/$&#123;ro.boot.bootdevice&#125;</span><br><span class="line">    symlink /dev/block/platform/soc/$&#123;ro.boot.bootdevice&#125; /dev/block/bootdevice</span><br><span class="line">    export ANDROID_ROOT /system_root</span><br><span class="line">    export TMPDIR /tmp</span><br><span class="line">    chmod 0660 /dev/qseecom</span><br><span class="line">    chown system drmrpc /dev/qseecom</span><br><span class="line">    chmod 0664 /dev/ion</span><br><span class="line">    chown system system /dev/ion</span><br><span class="line"></span><br><span class="line">on init</span><br><span class="line">    mkdir /system/bin</span><br><span class="line">    mkdir /system/etc</span><br><span class="line">    mkdir /cache/recovery</span><br><span class="line">    symlink /system/etc /etc</span><br><span class="line">    symlink /sbin/busybox /system/bin/sh</span><br><span class="line">    symlink /vendor/manifest.xml /system/manifest.xml</span><br><span class="line"></span><br><span class="line">on boot</span><br><span class="line">    setprop sys.usb.config adb</span><br><span class="line">    # Add DT2W</span><br><span class="line">    write /sys/class/input/input2/device/fts_gesture_mode 1</span><br></pre></td></tr></table></figure>
+
+<p>要点：</p>
+<ol>
+<li><strong><code>import /init.recovery.qcom_decrypt.rc</code></strong> —— OrangeFox 公共树（<code>device/xiaomi/sdm845-common</code>）提供的解密脚本，keymaster&#x2F;gatekeeper&#x2F;hwservicemanager 的服务定义和启动时序全在里面，由 VINTF manifest 自动注册，设备树不用再管。</li>
+<li><strong><code>export ANDROID_ROOT /system_root</code></strong> —— A10+ 的 recovery 用 system-as-root，system 挂载点变了。</li>
+<li><strong><code>symlink /sbin/busybox /system/bin/sh</code></strong> —— <code>system/bin</code> 里的服务脚本需要 sh。</li>
+<li>旧树里的 CPU governor &#x2F; perf-mode 调优已上移到公共树，设备树不再保留。</li>
+</ol>
+<hr>
+<h2 id="六、init-recovery-usb-rc-改写"><a href="#六、init-recovery-usb-rc-改写" class="headerlink" title="六、init.recovery.usb.rc 改写"></a>六、init.recovery.usb.rc 改写</h2><p>主要差异是 USB VID&#x2F;PID 与 gadget 配置：</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>旧树 (xmsirius)</th>
+<th>新树 (sirius)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>idVendor</td>
+<td><code>0x2717</code>（小米）</td>
+<td><code>0x18d1</code>（Google）</td>
+</tr>
+<tr>
+<td>adb PID</td>
+<td><code>0xFF08</code></td>
+<td><code>0x4ee7</code></td>
+</tr>
+<tr>
+<td>mtp,adb PID</td>
+<td><code>0xFF48</code></td>
+<td><code>0x2d08</code></td>
+</tr>
+<tr>
+<td>mass_storage</td>
+<td>有</td>
+<td>无</td>
+</tr>
+<tr>
+<td>vendor 属性</td>
+<td><code>setprop vendor.usb.controller</code>、<code>enable vendor.qcom-usb-sh</code></td>
+<td>无</td>
+</tr>
+</tbody></table>
+<p>迁移时建议<strong>直接采用新树版本</strong>：Google 官方 VID&#x2F;PID 在各类系统上驱动兼容性最好；<code>vendor.qcom-usb-sh</code> 是 A10+ 的 init 扩展，A12 ramdisk 里依赖环境不同，容易踩坑。</p>
+<hr>
+<h2 id="七、recovery-fstab：FDE-→-FBE"><a href="#七、recovery-fstab：FDE-→-FBE" class="headerlink" title="七、recovery.fstab：FDE → FBE"></a>七、recovery.fstab：FDE → FBE</h2><p>这是解密方案的代际差异，diff 如下：</p>
+<figure class="highlight diff"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"> /boot          emmc   /dev/block/bootdevice/by-name/boot</span><br><span class="line"><span class="addition">+/dtbo          emmc   /dev/block/bootdevice/by-name/dtbo    flags=backup=1;display=&quot;Dtbo&quot;;flashimg=1</span></span><br><span class="line"> /cache         ext4   /dev/block/bootdevice/by-name/cache</span><br><span class="line"> /recovery      emmc   /dev/block/bootdevice/by-name/recovery flags=backup=1</span><br><span class="line"><span class="deletion">-/system        ext4   /dev/block/bootdevice/by-name/system</span></span><br><span class="line"><span class="addition">+/system        ext4   /dev/block/bootdevice/by-name/system  flags=display=&quot;System&quot;;wipeingui</span></span><br><span class="line"> /vendor        ext4   /dev/block/bootdevice/by-name/vendor  flags=display=&quot;Vendor&quot;;flashimg=1</span><br><span class="line"><span class="addition">+/vendor_image  emmc   /dev/block/bootdevice/by-name/vendor</span></span><br><span class="line"></span><br><span class="line"><span class="deletion">-/data          ext4   /dev/block/bootdevice/by-name/userdata flags=encryptable=footer;length=-16384</span></span><br><span class="line"><span class="addition">+/data          f2fs   /dev/block/bootdevice/by-name/userdata flags=fileencryption=aes-256-xts:aes-256-cts:v1</span></span><br><span class="line"><span class="addition">+</span></span><br><span class="line"><span class="addition">+/metadata      ext4   /dev/block/bootdevice/by-name/cust    flags=display=&quot;Metadata&quot;</span></span><br><span class="line"><span class="addition">+/persist       ext4   /dev/block/bootdevice/by-name/persist flags=display=&quot;Persist&quot;</span></span><br><span class="line"><span class="addition">+/persist_image emmc   /dev/block/bootdevice/by-name/persist flags=display=&quot;Persist&quot;;flashimg=1</span></span><br></pre></td></tr></table></figure>
+
+<p>解读：</p>
+<ol>
+<li><strong><code>encryptable=footer</code>（FDE 全盘加密）→ <code>fileencryption=...</code>（FBE 文件级加密）</strong>：A10 起 MIUI&#x2F;类原生全部转向 FBE，<code>v1</code> policy 指定加密算法，OrangeFox 的 <code>qcom_decrypt.rc</code> 靠这个 flag 识别加密类型。</li>
+<li><strong>新增 <code>/metadata</code></strong>：FBE 存放密钥元数据，Mi 8 SE 没有独立 metadata 分区，<strong>借用 cust 分区</strong>（这也是 MIUI 官方做法）。</li>
+<li><strong>新增 <code>/dtbo</code></strong>：A10+ ROM 普遍需要独立刷 dtbo，备份列表里必须有它。</li>
+<li><strong><code>/data</code> 文件系统 ext4 → f2fs</strong>：跟随新版 ROM 的实际格式。</li>
+<li>USB OTG 节点从 <code>sda1</code> 改为 <code>sdg1</code>（UFS 机型盘符顺序在新内核下有变化，按你实际内核实测调整）。</li>
+</ol>
+<hr>
+<h2 id="八、OrangeFox-专属配置"><a href="#八、OrangeFox-专属配置" class="headerlink" title="八、OrangeFox 专属配置"></a>八、OrangeFox 专属配置</h2><ol>
+<li><strong>继承公共树</strong>：本设备树继承 <code>device/xiaomi/sdm845-common</code>（<code>qcom_decrypt.rc</code>、性能脚本、通用 vendor 库都在那），该仓库由 OrangeFox 源码的 <code>vendorsetup.sh</code> 自动克隆，无需手写依赖。</li>
+<li><strong>构建变体</strong>（README 中说明）：<ul>
+<li>默认：标准构建</li>
+<li><code>export FOX_USE_DYNAMIC_PARTITIONS=1</code>：给刷了 retrofit 动态分区 ROM 的用户</li>
+<li><code>export FOX_USE_KEYMASTER_4=1</code>：给借用 keymaster 4.0 的 ROM</li>
+</ul>
+</li>
+<li><strong><code>OF_USE_LEGACY_BATTERY_SERVICES := 1</code></strong>：老内核电量读取（见第三节）。</li>
+</ol>
+<hr>
+<h2 id="九、编译"><a href="#九、编译" class="headerlink" title="九、编译"></a>九、编译</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">cd</span> OrangeFox-src</span><br><span class="line"><span class="built_in">source</span> build/envsetup.sh</span><br><span class="line">lunch twrp_sirius-eng</span><br><span class="line">mka recoveryimage</span><br></pre></td></tr></table></figure>
+
+<p>产物在 <code>out/target/product/sirius/recovery.img</code>，fastboot 刷入即可。</p>
+<hr>
+<h2 id="十、常见坑汇总"><a href="#十、常见坑汇总" class="headerlink" title="十、常见坑汇总"></a>十、常见坑汇总</h2><table>
+<thead>
+<tr>
+<th>坑</th>
+<th>原因</th>
+<th>解法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>编译报 duplicate rules &#x2F; ELF prebuilt 错误</td>
+<td>A12 构建检查严格</td>
+<td><code>BUILD_BROKEN_DUP_RULES</code> + <code>BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES</code></td>
+</tr>
+<tr>
+<td>进 recovery 黑屏&#x2F;花屏</td>
+<td>像素格式变了</td>
+<td>保持 <code>TARGET_RECOVERY_PIXEL_FORMAT := &quot;BGRA_8888&quot;</code></td>
+</tr>
+<tr>
+<td>解密失败 &#x2F; data 无法挂载</td>
+<td>keymaster 版本或 manifest 与 ROM 不匹配</td>
+<td>从目标 ROM vendor.img 提取配套服务与 manifest</td>
+</tr>
+<tr>
+<td>电量显示 0% 或不刷新</td>
+<td>A12 框架读不到老内核电池节点</td>
+<td><code>OF_USE_LEGACY_BATTERY_SERVICES := 1</code></td>
+</tr>
+<tr>
+<td>adb 识别不到设备</td>
+<td>usb.rc VID&#x2F;PID 或 UDC 属性问题</td>
+<td>用新树 usb.rc；确认 <code>sys.usb.controller=a600000.dwc3</code></td>
+</tr>
+<tr>
+<td>亮度调节异常</td>
+<td><code>TW_MAX_BRIGHTNESS</code> 重复定义被覆盖</td>
+<td>只保留一处定义</td>
+</tr>
+<tr>
+<td>刷完 ROM 无法开机</td>
+<td>漏了 dtbo &#x2F; persist 备份恢复</td>
+<td>fstab 补全 <code>/dtbo</code>、<code>/persist</code> 条目</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p>整个迁移的本质是三件事：</p>
+<ol>
+<li><strong>结构对齐</strong>：目录改名、ramdisk 布局从 <code>sbin</code> 时代改成 system-as-root 时代；</li>
+<li><strong>解密方案换代</strong>：手动管理 keymaster 3.0 服务 → VINTF manifest + keymaster 4.0 自动注册，fstab 从 FDE 改 FBE；</li>
+<li><strong>OrangeFox 化</strong>：公共树 import、<code>OF_*</code> 系列适配 flag。</li>
+</ol>
+<p>照着本文逐节对照，任何一台 A9 时代的 TWRP 设备树都可以用同样的思路搬进 OrangeFox A12.1。</p>
+
+        
+      </div>
+
+         
+    </div>
+    
+     
+  </div>
+  
+    
+
+  
+</article>
+
+
+
+
+  <script src="https://cdn.staticfile.org/twikoo/1.6.26/twikoo.all.min.js"></script>
+  <div id="comment-card" class="comment-card">
+    <div class="main-title-bar">
+      <div class="main-title-dot"></div>
+      <div class="main-title">留言 </div>
+    </div>
+    <div id="tcomment"></div>
+  </div>
+  <script>
+      twikoo.init({
+          envId: 'https://twikoo-murex-nine.vercel.app/',
+          el: '#tcomment',
+          region: '',
+          path: 'location.pathname',
+          lang: 'zh_CN',
+      })
+  </script>
+  
+
+
+    </div>
+    <div id="footer-wrapper">
+      <footer id="footer">
+  
+  <div id="footer-info" class="inner">
+    
+    &copy; 2026 元時光<br>
+    Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & Theme <a target="_blank" rel="noopener" href="https://github.com/saicaca/hexo-theme-vivia">Vivia</a>
+  </div>
+</footer>
+
+    </div>
+    <div class="back-to-top-wrapper">
+    <button id="back-to-top-btn" class="back-to-top-btn hide" onclick="topFunction()">
+        <i class="fa-solid fa-angle-up"></i>
+    </button>
+</div>
+
+<script>
+    function topFunction() {
+        window.scroll({ top: 0, behavior: 'smooth' });
+    }
+    let btn = document.getElementById('back-to-top-btn');
+    function scrollFunction() {
+        if (document.body.scrollTop > 600 || document.documentElement.scrollTop > 600) {
+            btn.classList.remove('hide')
+        } else {
+            btn.classList.add('hide')
+        }
+    }
+    window.onscroll = function() {
+        scrollFunction();
+    }
+</script>
+
+  </div>
+  <script src="/js/light-dark-switch.js"></script>
+</body>
+</html>
